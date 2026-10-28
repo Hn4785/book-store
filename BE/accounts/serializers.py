@@ -77,3 +77,39 @@ class RegisterSerializer(serializers.ModelSerializer):
             role=User.Role.CUSTOMER,
             **validated_data,
         )
+
+class InvalidCredentials(APIException):
+    """Lỗi khi email hoặc mật khẩu không chính xác."""
+
+    status_code = 401
+    default_detail = {
+        "code": "INVALID_CREDENTIALS",
+        "message": "Email hoặc mật khẩu không chính xác.",
+    }
+    default_code = "INVALID_CREDENTIALS"
+
+
+class LoginSerializer(serializers.Serializer):
+    """Serializer đăng nhập bằng email và mật khẩu."""
+
+    email = serializers.EmailField(trim_whitespace=True)
+    password = serializers.CharField(
+        write_only=True,
+        trim_whitespace=False,
+    )
+
+    def validate(self, attrs):
+        email = attrs["email"].strip().lower()
+        password = attrs["password"]
+
+        user = User.objects.filter(email__iexact=email).first()
+
+        # Không tiết lộ email có tồn tại hay không.
+        if user is None or not user.check_password(password):
+            raise InvalidCredentials()
+
+        if not user.is_active:
+            raise InvalidCredentials()
+
+        attrs["user"] = user
+        return attrs

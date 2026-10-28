@@ -114,3 +114,142 @@ class RegisterAPITests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("username", response.data)
+
+
+class LoginAPITests(APITestCase):
+    URL = "/api/v1/auth/login"
+
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="test_user",
+            email="test@example.com",
+            password="TestPass123",
+        )
+
+    def test_login_success(self):
+        response = self.client.post(
+            self.URL,
+            {
+                "email": "TEST@EXAMPLE.COM",
+                "password": "TestPass123",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("access", response.data)
+        self.assertEqual(response.data["user"]["id"], self.user.id)
+        self.assertEqual(response.data["user"]["role"], "CUSTOMER")
+        self.assertNotIn("password", response.data["user"])
+
+    def test_login_wrong_password(self):
+        response = self.client.post(
+            self.URL,
+            {
+                "email": "test@example.com",
+                "password": "WrongPassword123",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.data["code"], "INVALID_CREDENTIALS")
+
+    def test_login_unknown_email(self):
+        response = self.client.post(
+            self.URL,
+            {
+                "email": "unknown@example.com",
+                "password": "TestPass123",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.data["code"], "INVALID_CREDENTIALS")
+
+
+class MeAPITests(APITestCase):
+    URL = "/api/v1/auth/me"
+
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="test_user",
+            email="test@example.com",
+            password="TestPass123",
+        )
+
+        login_response = self.client.post(
+            "/api/v1/auth/login",
+            {
+                "email": "test@example.com",
+                "password": "TestPass123",
+            },
+            format="json",
+        )
+
+        self.access_token = login_response.data["access"]
+
+    def test_me_with_valid_token(self):
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Bearer {self.access_token}"
+        )
+
+        response = self.client.get(self.URL)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["id"], self.user.id)
+        self.assertEqual(response.data["username"], "test_user")
+        self.assertEqual(response.data["email"], "test@example.com")
+        self.assertEqual(response.data["role"], "CUSTOMER")
+        self.assertNotIn("password", response.data)
+
+    def test_me_without_token(self):
+        response = self.client.get(self.URL)
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_401_UNAUTHORIZED,
+        )
+
+
+class LogoutAPITests(APITestCase):
+    URL = "/api/v1/auth/logout"
+
+    def setUp(self):
+        User.objects.create_user(
+            username="test_user",
+            email="test@example.com",
+            password="TestPass123",
+        )
+
+        login_response = self.client.post(
+            "/api/v1/auth/login",
+            {
+                "email": "test@example.com",
+                "password": "TestPass123",
+            },
+            format="json",
+        )
+
+        self.access_token = login_response.data["access"]
+
+    def test_logout_with_valid_token(self):
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Bearer {self.access_token}"
+        )
+
+        response = self.client.post(self.URL)
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_204_NO_CONTENT,
+        )
+
+    def test_logout_without_token(self):
+        response = self.client.post(self.URL)
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_401_UNAUTHORIZED,
+        )
