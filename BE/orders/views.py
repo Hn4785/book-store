@@ -40,7 +40,7 @@ class OrderListView(generics.ListAPIView):
 
     def get_queryset(self):
         return (
-            Order.objects.filter(user=self.request.user)
+            Order.objects.all() #bug
             .prefetch_related("items")
             .order_by("-created_at", "-id")
         )
@@ -52,7 +52,7 @@ class OrderDetailView(generics.RetrieveAPIView):
 
     def get_queryset(self):
         return (
-            Order.objects.filter(user=self.request.user)
+            Order.objects.all()
             .prefetch_related("items")
         )
 
@@ -109,7 +109,7 @@ class CancelOrderView(APIView):
 
 
 class AdminOrderStatusUpdateView(APIView):
-    permission_classes = [IsAuthenticated, IsAdminRole]
+    permission_classes = [IsAuthenticated] #bug
 
     ALLOWED_TRANSITIONS = {
         Order.Status.PENDING: {

@@ -72,7 +72,7 @@ class OrderItem(models.Model):
     )
     book = models.ForeignKey(
         "books.Book",
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE, #bug
         related_name="order_items",
     )
 

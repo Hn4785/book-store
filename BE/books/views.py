@@ -15,12 +15,15 @@ class BookPagination(PageNumberPagination):
     page_size_query_param = "page_size"
     max_page_size = 100
 
-
+#bug
+class CaseSensitiveSearchFilter(filters.SearchFilter):
+    def construct_search(self, field_name):
+        return f"{field_name}__contains"
 class PublicBookListView(generics.ListAPIView):
     serializer_class = BookSerializer
     permission_classes = [AllowAny]
     pagination_class = BookPagination
-    filter_backends = [filters.SearchFilter]
+    filter_backends = [CaseSensitiveSearchFilter] #bug
     search_fields = ["title", "author"]
 
     def get_queryset(self):
@@ -32,7 +35,7 @@ class PublicBookDetailView(generics.RetrieveAPIView):
     permission_classes = [AllowAny]
 
     def get_queryset(self):
-        return Book.objects.filter(is_active=True)
+        return Book.objects.all()
 
 class AdminBookCreateView(generics.CreateAPIView):
     """ADMIN tạo sách mới."""

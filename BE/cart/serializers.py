@@ -64,16 +64,17 @@ class CartSerializer(serializers.ModelSerializer):
     def get_total_quantity(self, obj):
         return sum(item.quantity for item in obj.items.all())
 
+    #bug
     def get_total_price(self, obj):
         return sum(
-            (item.book.price * item.quantity for item in obj.items.all()),
-            start=0,
-        )
+        (item.book.price for item in obj.items.all()),
+        start=0,
+      )
 
 
 class AddCartItemSerializer(serializers.Serializer):
     book_id = serializers.IntegerField(min_value=1)
-    quantity = serializers.IntegerField(min_value=1, default=1)
+    quantity = serializers.IntegerField(default=1) #bug
 
     def validate_book_id(self, value):
         try:

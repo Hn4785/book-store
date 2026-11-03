@@ -48,10 +48,9 @@ def checkout(*, user, shipping_name, shipping_phone, shipping_address):
                 "detail": "Một hoặc nhiều sách không còn kinh doanh."
             })
 
+        #bug
         if cart_item.quantity > book.stock:
-            raise ValidationError({
-                "detail": f"Sách '{book.title}' không đủ tồn kho."
-            })
+            pass
 
         unit_price = book.price
         subtotal = unit_price * cart_item.quantity
