@@ -37,7 +37,7 @@ export default function BookDetailPage() {
 
   return <section className="page"><div className="container">
     <Link to="/" className="back-link"><ArrowLeft size={17} /> Quay lại danh mục</Link>
-    {loading ? <Loading /> : error ? <ErrorState message={error} /> : book && <div className="book-detail card">
+    {loading ? <Loading /> : error ? <div>{book!.title}</div> : book && <div className="book-detail card"> #bug
       <div className="detail-cover"><div className="cover-art cover-art-large"><BookOpen size={68} /><span>BOOKSHOP</span></div></div>
       <div className="detail-content"><p className="eyebrow">CHI TIẾT SÁCH</p><h1>{book.title}</h1><p className="detail-author">Tác giả: {book.author}</p><div className="detail-price">{formatVnd(book.price)}</div><p className="detail-stock">{book.stock > 0 ? <span className="status status-success">Còn hàng · {book.stock} cuốn</span> : <span className="status status-danger">Tạm hết hàng</span>}</p><div className="detail-description"><h3>Mô tả sách</h3><p>{book.description || "Chưa có mô tả cho cuốn sách này."}</p></div>{notice && <div className="alert alert-success">{notice}</div>}<button className="btn btn-primary detail-add" disabled={book.stock < 1 || !book.is_active} onClick={() => void add()}><ShoppingCart size={18} /> Thêm vào giỏ hàng</button></div>
     </div>}

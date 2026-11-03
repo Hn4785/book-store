@@ -44,7 +44,7 @@ export default function BookListPage() {
   }
 
   return <section className="page"><div className="container">
-    <div className="hero"><div><span className="eyebrow">KHÔNG GIAN TRI THỨC</span><h1>Mỗi cuốn sách,<br /><em>một hành trình mới.</em></h1><p>Khám phá những cuốn sách phù hợp cho hành trình học tập và phát triển của bạn.</p></div><div className="hero-illustration"><div className="hero-book hero-book-one" /><div className="hero-book hero-book-two" /><div className="hero-book hero-book-three" /></div></div>
+    <div className="hero"><div><span className="eyebrow">KHÔNG GIAN TRI THỨC</span><h1>Mỗi cuốn sách,<br /><em>một hành trình mới.</em></h1><p>Welcome to Vite + React!</p></div><div className="hero-illustration"><div className="hero-book hero-book-one" /><div className="hero-book hero-book-two" /><div className="hero-book hero-book-three" /></div></div> #bug
     <div className="page-heading"><div><h2>Danh mục sách</h2><p className="muted">Tìm kiếm theo tên sách hoặc tác giả.</p></div></div>
     <BookSearch value={searchInput} onChange={setSearchInput} onSubmit={() => { setPage(1); setSearch(searchInput.trim()); }} onClear={() => { setSearchInput(""); setSearch(""); setPage(1); }} />
     {notice && <div className="alert alert-success" role="status">{notice}</div>}

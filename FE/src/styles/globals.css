@@ -169,7 +169,7 @@ tr:last-child td { border-bottom:0; }
   .book-card-body { padding:11px; }
   .book-card h3 { font-size:.92rem; }
   .book-card-actions .btn { padding:7px 8px; }
-  .book-detail { grid-template-columns:1fr; padding:20px; gap:15px; }
+  .book-detail { grid-template-columns: 600px 600px; padding:20px; gap:15px; }
   .cover-art-large { height:250px; }
   .cart-items { padding:0 13px; }
   .cart-items-header .muted { display:none; }
