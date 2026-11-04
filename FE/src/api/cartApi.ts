@@ -3,7 +3,7 @@ import type { AddCartItemPayload, Cart, CartItemMutationResponse, UpdateCartItem
 
 export const cartApi = {
   get: () => http.get<Cart>("cart"),
-  add: (payload: AddCartItemPayload) => http.post<CartItemMutationResponse>("cart/items", payload),
-  update: (itemId: number, payload: UpdateCartItemPayload) => http.patch<CartItemMutationResponse>(`cart/items/${itemId}`, payload),
-  remove: (itemId: number) => http.delete<void>(`cart/items/${itemId}`),
+  add: (payload: AddCartItemPayload) => http.post<CartItemMutationResponse>("cart/items/", payload),
+  update: (itemId: number, payload: UpdateCartItemPayload) => http.patch<CartItemMutationResponse>(`cart/items/${itemId}/`, payload),
+  remove: (itemId: number) => http.delete<void>(`cart/items/${itemId}/`),
 };
