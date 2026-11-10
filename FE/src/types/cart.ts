@@ -11,7 +11,7 @@ export interface CartItem {
 export interface Cart {
   id: number;
   items: CartItem[];
-  total: string;
+  total_price: string;
 }
 
 export interface AddCartItemPayload {
