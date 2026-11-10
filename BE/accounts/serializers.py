@@ -21,18 +21,15 @@ class RegisterSerializer(serializers.ModelSerializer):
     """Serializer đăng ký tài khoản khách hàng."""
 
     username = serializers.CharField(
-        min_length=3,
-        max_length=30,
         trim_whitespace=False,
     )
 
-    email = serializers.EmailField(
+    email = serializers.CharField(
         trim_whitespace=True,
     )
 
     password = serializers.CharField(
         write_only=True,
-        min_length=8,
         trim_whitespace=False,
     )
 
