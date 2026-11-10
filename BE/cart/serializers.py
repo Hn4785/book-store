@@ -67,9 +67,9 @@ class CartSerializer(serializers.ModelSerializer):
     #bug
     def get_total_price(self, obj):
         return sum(
-        (item.book.price for item in obj.items.all()),
-        start=0,
-      )
+        (item.book.price * item.quantity for item in obj.items.all()),
+            start=0
+        )
 
 
 class AddCartItemSerializer(serializers.Serializer):
