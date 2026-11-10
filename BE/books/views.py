@@ -80,7 +80,7 @@ class AdminBookDeactivateView(APIView):
         return Response(
             {
                 "message": "Đã ẩn sách thành công.",
-                "id": book.id,
+                "id": book.pk,
                 "is_active": book.is_active,
             },
             status=status.HTTP_200_OK,
