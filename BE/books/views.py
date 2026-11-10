@@ -1,4 +1,4 @@
-
+from django.db.models import Q
 from rest_framework import generics, filters, status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
@@ -15,21 +15,21 @@ class BookPagination(PageNumberPagination):
     page_size_query_param = "page_size"
     max_page_size = 100
 
-#bug
-class CaseSensitiveSearchFilter(filters.SearchFilter):
-    def construct_search(self, field_name):
-        return f"{field_name}__contains"
 class PublicBookListView(generics.ListAPIView):
     serializer_class = BookSerializer
     permission_classes = [AllowAny]
     pagination_class = BookPagination
-    filter_backends = [CaseSensitiveSearchFilter] #bug
-    search_fields = ["title", "author"]
+    #filter_backends = [filters.SearchFilter]
+    #search_fields = ["title", "author"]
 
     def get_queryset(self):
-        return Book.objects.filter(is_active=True).order_by("id")
-
-
+        queryset = Book.objects.filter(is_active=True).order_by("id")
+        term = self.request.query_params.get("search", "").strip()
+        if term:
+            queryset = queryset.filter(
+                Q(title__contains=term) | Q(author__contains=term)
+            )
+        return queryset
 class PublicBookDetailView(generics.RetrieveAPIView):
     serializer_class = BookSerializer
     permission_classes = [AllowAny]
