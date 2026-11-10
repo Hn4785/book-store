@@ -23,7 +23,7 @@ class PublicBookListView(generics.ListAPIView):
     serializer_class = BookSerializer
     permission_classes = [AllowAny]
     pagination_class = BookPagination
-    filter_backends = [CaseSensitiveSearchFilter] #bug
+    filter_backends = [filters.SearchFilter] #bug
     search_fields = ["title", "author"]
 
     def get_queryset(self):
