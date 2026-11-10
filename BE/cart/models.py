@@ -39,9 +39,9 @@ class CartItem(models.Model):
         on_delete=models.PROTECT,
         related_name="cart_items",
     )
-    quantity = models.PositiveIntegerField(
+    quantity = models.IntegerField(
         default=1,
-        validators=[MinValueValidator(1)],
+        #validators=[MinValueValidator(1)],
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -53,10 +53,10 @@ class CartItem(models.Model):
                 fields=["cart", "book"],
                 name="cart_item_unique_book",
             ),
-            models.CheckConstraint(
-                condition=models.Q(quantity__gte=1),
-                name="cart_item_quantity_min_1",
-            ),
+            #models.CheckConstraint(
+                #condition=models.Q(quantity__gte=1),
+                #name="cart_item_quantity_min_1",
+            #),
         ]
 
     def __str__(self):

@@ -90,11 +90,10 @@ class UpdateCartItemView(generics.UpdateAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        if quantity < 1:
-            return Response(
-                {"quantity": "Số lượng phải lớn hơn hoặc bằng 1."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        #if quantity < 1:
+            #return Response(
+                #{"quantity": "Số lượng phải lớn hơn hoặc bằng 1."},
+                #status=status.HTTP_400_BAD_REQUEST,)
 
         with transaction.atomic():
             item = self.get_queryset().select_for_update().filter(
@@ -115,11 +114,10 @@ class UpdateCartItemView(generics.UpdateAPIView):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
-            if quantity > book.stock:
-                return Response(
-                    {"quantity": "Số lượng yêu cầu vượt quá tồn kho."},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
+            #if quantity > book.stock:
+                #return Response(
+                    #{"quantity": "Số lượng yêu cầu vượt quá tồn kho."},
+                    #status=status.HTTP_400_BAD_REQUEST,)
 
             item.quantity = quantity
             item.save(update_fields=["quantity", "updated_at"])
