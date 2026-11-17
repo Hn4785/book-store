@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { orderApi } from "../../api/orderApi";
-import { ApiError } from "../../types/api";
 
 export default function CheckoutPage() {
   const [shipping_name, setName] = useState("");
