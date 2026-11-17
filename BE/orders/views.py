@@ -58,7 +58,7 @@ class OrderDetailView(generics.RetrieveAPIView):
 
     def get_queryset(self):
         return (
-            Order.objects.all()
+            Order.objects.filter(user=self.request.user)
             .prefetch_related("items")
         )
 
