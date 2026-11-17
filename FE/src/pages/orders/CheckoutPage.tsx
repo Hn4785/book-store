@@ -15,8 +15,11 @@ export default function CheckoutPage() {
     event.preventDefault(); setError(""); setBusy(true);
     try {
       const order = await orderApi.create({ shipping_name: shipping_name.trim(), shipping_phone: shipping_phone.trim(), shipping_address: shipping_address.trim() });
+      if (!Number.isInteger(order.id) || order.id <= 0) {
+        throw new Error("Đơn hàng đã được gửi nhưng máy chủ không trả về mã đơn hợp lệ. Hãy kiểm tra danh sách đơn hàng.");
+      }
       navigate(`/orders/${order.id}`, { state: { created: true } });
-    } catch (err) { setError(err instanceof ApiError ? err.message : "Không thể tạo đơn hàng."); }
+    } catch (err) { setError(err instanceof Error ? err.message : "Không thể tạo đơn hàng."); }
     finally { setBusy(false); }
   }
   return <section className="page"><div className="container"><div className="page-heading"><div><p className="eyebrow">HOÀN TẤT ĐẶT HÀNG</p><h1>Thông tin nhận hàng</h1><p className="muted">BookShop MVP không tích hợp thanh toán trực tuyến.</p></div></div><form className="form-card card checkout-form" onSubmit={submit}>

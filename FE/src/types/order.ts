@@ -1,8 +1,10 @@
 export type OrderStatus = "PENDING" | "CONFIRMED" | "SHIPPING" | "COMPLETED" | "CANCELED";
 
 export interface OrderItem {
-  book_id: number;
-  title: string;
+  id: number;
+  book: number;
+  book_title_snapshot: string;
+  author_snapshot: string;
   quantity: number;
   unit_price: string;
   subtotal: string;
@@ -30,6 +32,9 @@ export interface CreateOrderPayload {
 }
 
 export interface CreateOrderResponse extends OrderSummary {
+  shipping_name: string;
+  shipping_phone: string;
+  shipping_address: string;
   items: OrderItem[];
 }
 
