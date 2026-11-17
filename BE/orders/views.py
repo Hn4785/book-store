@@ -15,7 +15,12 @@ from .services import checkout
 
 from accounts.permissions import IsAdminRole
 from .serializers import AdminOrderStatusSerializer
+from rest_framework.pagination import PageNumberPagination
 
+class OrderPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = "page_size"
+    max_page_size = 100
 class CheckoutView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -37,10 +42,11 @@ class CheckoutView(APIView):
 class OrderListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = OrderSerializer
+    pagination_class = OrderPagination
 
     def get_queryset(self):
         return (
-            Order.objects.all() #bug
+            Order.objects.filter(user=self.request.user)
             .prefetch_related("items")
             .order_by("-created_at", "-id")
         )
